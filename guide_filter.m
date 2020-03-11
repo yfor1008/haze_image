@@ -12,6 +12,8 @@ function [filtered] = guide_filter(im, guide_im, win_size, eps)
 % docs:
 %
 
+win_size = win_size * 2 + 1;
+
 im = double(im);
 guide_im = double(guide_im);
 
