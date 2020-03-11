@@ -39,7 +39,7 @@ transmission = estimate_t(im, A, win_size, w);
 
 % step4
 % transmission = matte(im, transmission); % 非常慢
-transmission = guide_filter(transmission, im, win_size*8); % 滤波窗口半径至少是最小值滤波的4倍
+transmission = guide_filter(transmission, im, win_size*8, 10^-6); % 滤波窗口半径至少是最小值滤波的4倍
 
 % step5
 dehazed_im = get_radiance(im, A, transmission, t0);

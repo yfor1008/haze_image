@@ -1,10 +1,11 @@
-function [filtered] = guide_filter(im, guide_im, win_size)
+function [filtered] = guide_filter(im, guide_im, win_size, eps)
 % guide_filter - 导向滤波
 %
 % input:
 %   - im: h*w, 待滤波图像, 需为gray图像
 %   - guide_im: h*w*c, 引导图像, c=3时为rgb图像, c=1时为gray图像
 %   - win_size: int, 滤波窗口半径
+%   - eps: float, 越大图像越模糊
 % output:
 %   - filtered: h*w, 滤波后图像
 %
@@ -14,7 +15,6 @@ function [filtered] = guide_filter(im, guide_im, win_size)
 im = double(im);
 guide_im = double(guide_im);
 
-eps = 10^-6;
 [h, w, c] = size(guide_im);
 
 N = box_filter(ones(h, w), win_size); % 滤波窗口内像素个数
