@@ -6,7 +6,7 @@ function [dehazed_im] = dehaze(varargin)
 %
 % input:
 %   - im: h*w*3, rgb图像
-%   - win_size: int, 最小值滤波窗口半径, 建议取[5,25], 值越大去雾效果越不明显
+%   - win_size: int, 最小值滤波窗口半径
 %   - ratio: float, 取有雾像素比例, 文章中为0.001
 %   - w: float, 透射率限制系数, 文章中为0.95, 值越小去雾效果越不明显
 %   - thres: int, 对大气光值限制阈值, 默认为220
@@ -39,7 +39,9 @@ transmission = estimate_t(im, A, win_size, w);
 
 % step4
 % transmission = matte(im, transmission); % 非常慢
-transmission = guide_filter(transmission, im, win_size*8, 10^-6); % 滤波窗口半径至少是最小值滤波的4倍
+filterRadius = ceil(min(size(im,1), size(im,2)) / 50);
+% transmission = guide_filter(transmission, im, filterRadius, 10^-4); % 滤波窗口半径至少是最小值滤波的4倍
+transmission = imguidedfilter(transmission, im, [filterRadius*2+1, filterRadius*2+1], 10^-4, 4); % 滤波窗口半径至少是最小值滤波的4倍
 
 % step5
 dehazed_im = get_radiance(im, A, transmission, t0);
@@ -182,7 +184,7 @@ num = length(varargin);
 switch num
 case 1
     im = varargin{1};
-    win_size = 7;
+    win_size = ceil(min(size(im,1), size(im,2)) / 400 * 15);
     ratio = 0.001;
     w = 0.95;
     thres = 220;
